@@ -89,10 +89,10 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "CountryPickerView/**/*.{swift,xib}"
+  s.source_files  = "RMCountryPicker/CountryPickerView/","RMCountryPicker/CountryPickerView/**/*.{swift,xib}"
   s.exclude_files = "Classes/Exclude"
   s.resource_bundles = {
-    'CountryPickerView' => ['CountryPickerView/Assets/CountryPickerView.bundle/*']
+    'CountryPickerView' => ['RMCountryPicker/CountryPickerView/Assets/CountryPickerView.bundle/*']
   }
   s.swift_version = "4.0"
 

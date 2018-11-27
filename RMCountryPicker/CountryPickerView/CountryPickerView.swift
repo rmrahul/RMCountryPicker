@@ -47,10 +47,27 @@ public class CountryPickerView: NibView {
         }
     }
     @IBOutlet public weak var countryDetailsLabel: UILabel!
-    
+    @IBOutlet public weak var widthOfCountryFlag: NSLayoutConstraint!
+
     // Show/Hide the country code on the view.
     public var showCountryCodeInView = true {
         didSet { setup() }
+    }
+    
+    public var showCountryFlagInView = false {
+        didSet {
+            if(showCountryFlagInView){
+                self.widthOfCountryFlag.constant = 30
+                //self.countryDetailsLabel.text = ""
+//                self.countryDetailsLabel.isHidden = true
+//                self.countryDetailsLabel.removeFromSuperview()
+            }
+            else{
+                self.widthOfCountryFlag.constant = 0
+
+            }
+            setup()
+        }
     }
     
     // Show/Hide the phone code on the view.
@@ -121,6 +138,7 @@ public class CountryPickerView: NibView {
         
     }
     
+    
     @IBAction func openCountryPickerController(_ sender: Any) {
         if let vc = window?.topViewController {
             if let tabVc = vc as? UITabBarController,
@@ -134,6 +152,9 @@ public class CountryPickerView: NibView {
     
     public func showCountriesList(from viewController: UIViewController) {
         let countryVc = CountryPickerViewController(style: .grouped)
+        if(showCountryFlagInView){
+            countryVc.showFlag = true
+        }
         countryVc.countryPickerView = self
         if let viewController = viewController as? UINavigationController {
             delegate?.countryPickerView(self, willShow: countryVc)

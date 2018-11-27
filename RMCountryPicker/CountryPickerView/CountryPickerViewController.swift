@@ -23,6 +23,8 @@ class CountryPickerViewController: UITableViewController {
         return dataSource.showOnlyPreferredSection
     }
     
+    var showFlag: Bool = false
+    
     weak var countryPickerView: CountryPickerView! {
         didSet {
             dataSource = CountryPickerViewDataSourceInternal(view: countryPickerView)
@@ -38,7 +40,7 @@ class CountryPickerViewController: UITableViewController {
         prepareNavItem()
         prepareSearchBar()
     }
-   
+    
 }
 
 // UI Setup
@@ -90,7 +92,7 @@ extension CountryPickerViewController {
     
     func prepareNavItem() {
         navigationItem.title = dataSource.navigationTitle
-
+        
         // Add a close button if this is the root view controller
         if navigationController?.viewControllers.count == 1 {
             let closeButton = dataSource.closeButtonNavigationItem
@@ -112,7 +114,7 @@ extension CountryPickerViewController {
         searchController?.definesPresentationContext = true
         searchController?.searchBar.delegate = self
         searchController?.delegate = self
-
+        
         switch searchBarPosition {
         case .tableViewHeader: tableView.tableHeaderView = searchController?.searchBar
         case .navigationBar: navigationItem.titleView = searchController?.searchBar
@@ -146,20 +148,28 @@ extension CountryPickerViewController {
             : countries[sectionsTitles[indexPath.section]]![indexPath.row]
         
         //let name = dataSource.showPhoneCodeInList ? "\(country.name) (\(country.phoneCode))" : country.name
-        let name = "\(country.name) (\(country.phoneCode))"
-
-        //cell.imageView?.image = country.flag
         
-        //cell.flgSize = dataSource.cellImageViewSize
-        //cell.imageView?.clipsToBounds = true
-
-        //cell.imageView?.layer.cornerRadius = dataSource.cellImageViewCornerRadius
-        //cell.imageView?.layer.masksToBounds = true
-        
-        cell.textLabel?.text = name
-        cell.textLabel?.font = dataSource.cellLabelFont
-        cell.accessoryType = country == countryPickerView.selectedCountry ? .checkmark : .none
-        cell.separatorInset = .zero
+        if(self.showFlag){
+            let name = "\(country.name)"
+            
+            cell.imageView?.image = country.flag
+            
+            cell.flgSize = dataSource.cellImageViewSize
+            cell.imageView?.clipsToBounds = true
+            
+            cell.imageView?.layer.cornerRadius = dataSource.cellImageViewCornerRadius
+            cell.imageView?.layer.masksToBounds = true
+            
+            cell.textLabel?.text = name
+        }
+        else{
+            let name = "\(country.name) (\(country.phoneCode))"
+            
+            cell.textLabel?.text = name
+            cell.textLabel?.font = dataSource.cellLabelFont
+            cell.accessoryType = country == countryPickerView.selectedCountry ? .checkmark : .none
+            cell.separatorInset = .zero
+        }
         return cell
     }
     
@@ -185,7 +195,7 @@ extension CountryPickerViewController {
 
 //MARK:- UITableViewDelegate
 extension CountryPickerViewController {
-
+    
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if let header = view as? UITableViewHeaderFooterView {
             header.textLabel?.font = dataSource.sectionTitleLabelFont
@@ -196,7 +206,7 @@ extension CountryPickerViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         let country = isSearchMode ? searchResults[indexPath.row]
             : countries[sectionsTitles[indexPath.section]]![indexPath.row]
-
+        
         searchController?.dismiss(animated: false, completion: nil)
         
         let completion = {
@@ -227,7 +237,7 @@ extension CountryPickerViewController: UISearchResultsUpdating {
             } else if let array = countries[String(text[text.startIndex])] {
                 indexArray = array
             }
-
+            
             searchResults.append(contentsOf: indexArray.filter({ $0.name.hasPrefix(text) }))
         }
         tableView.reloadData()
