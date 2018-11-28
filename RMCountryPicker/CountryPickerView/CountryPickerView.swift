@@ -99,7 +99,7 @@ public class CountryPickerView: NibView {
     weak public var delegate: CountryPickerViewDelegate?
     
     fileprivate var _selectedCountry: Country?
-    internal(set) public var selectedCountry: Country {
+    public var selectedCountry: Country {
         get {
             return _selectedCountry
                 ?? countries.first(where: { $0.code == Locale.current.regionCode })

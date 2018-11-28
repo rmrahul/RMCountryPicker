@@ -91,7 +91,19 @@ extension CountryPickerViewController {
     }
     
     func prepareNavItem() {
-        navigationItem.title = dataSource.navigationTitle
+        //navigationItem.title = dataSource.navigationTitle
+        navigationItem.title = "Select Country"
+        
+        let space = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.fixedSpace, target: nil, action: nil)
+        space.width = 15
+        
+        let btnLeftMenu: UIButton = UIButton()
+        btnLeftMenu.setImage(UIImage(named: "backArrow"), for: UIControlState())
+        btnLeftMenu.addTarget(self, action: #selector(CountryPickerViewController.btnbackClicked), for: UIControlEvents.touchUpInside)
+        btnLeftMenu.frame = CGRect(x: 0, y: 0, width: 33/2, height: 27/2)
+        let barButton = UIBarButtonItem(customView: btnLeftMenu)
+        self.navigationItem.leftBarButtonItems = [space,barButton] 
+        
         
         // Add a close button if this is the root view controller
         if navigationController?.viewControllers.count == 1 {
@@ -100,6 +112,10 @@ extension CountryPickerViewController {
             closeButton.action = #selector(close)
             navigationItem.leftBarButtonItem = closeButton
         }
+    }
+    
+    @objc func btnbackClicked(){
+        self.navigationController?.popViewController(animated: true)
     }
     
     func prepareSearchBar() {
