@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "RMCountryPicker"
-  s.version      = "0.0.4"
+  s.version      = "0.0.5"
   s.summary      = "A simple, customizable view for selecting countries in iOS apps."
 
   # This description is used to generate tags and improve search results.
