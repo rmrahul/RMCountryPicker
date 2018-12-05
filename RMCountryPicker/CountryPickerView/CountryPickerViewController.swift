@@ -39,6 +39,7 @@ class CountryPickerViewController: UITableViewController {
         prepareTableItems()
         prepareNavItem()
         prepareSearchBar()
+        
     }
     
 }
@@ -88,6 +89,8 @@ extension CountryPickerViewController {
         
         tableView.sectionIndexBackgroundColor = .clear
         tableView.sectionIndexTrackingBackgroundColor = .clear
+        
+        self.tableView.setContentOffset(CGPoint(x: 0, y: -44), animated: false)
     }
     
     func prepareNavItem() {
@@ -126,16 +129,49 @@ extension CountryPickerViewController {
         searchController = UISearchController(searchResultsController:  nil)
         searchController?.searchResultsUpdater = self
         searchController?.dimsBackgroundDuringPresentation = false
-        searchController?.hidesNavigationBarDuringPresentation = searchBarPosition == .tableViewHeader
-        searchController?.definesPresentationContext = true
+        //searchController?.hidesNavigationBarDuringPresentation = searchBarPosition == .tableViewHeader
+       // searchController?.definesPresentationContext = true
         searchController?.searchBar.delegate = self
         searchController?.delegate = self
         
+        if #available(iOS 11.0, *) {
+            self.searchController?.searchBar.barStyle = .black
+            self.searchController?.searchBar.tintColor = UIColor.white
+            self.navigationItem.searchController = self.searchController
+            self.navigationItem.hidesSearchBarWhenScrolling = false
+            
+            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: UIColor.black]
+
+            
+            let scb = self.searchController?.searchBar
+            //scb?.tintColor = UIColor.white
+            //scb?.barTintColor = UIColor.white
+            
+            if let textfield = scb?.value(forKey: "searchField") as? UITextField {
+                textfield.textColor = UIColor.blue
+                if let backgroundview = textfield.subviews.first {
+                    
+                    // Background color
+                    backgroundview.backgroundColor = UIColor.white
+                    
+                    // Rounded corner
+                    backgroundview.layer.cornerRadius = 10;
+                    backgroundview.clipsToBounds = true;
+                }
+            }
+            
+            navigationItem.searchController = self.searchController
+            navigationItem.hidesSearchBarWhenScrolling = false
+            
+        } else {
+            tableView.tableHeaderView = searchController?.searchBar
+        }
+        /*
         switch searchBarPosition {
         case .tableViewHeader: tableView.tableHeaderView = searchController?.searchBar
         case .navigationBar: navigationItem.titleView = searchController?.searchBar
         default: break
-        }
+        }*/
     }
     
     @objc private func close() {
@@ -264,14 +300,14 @@ extension CountryPickerViewController: UISearchResultsUpdating {
 extension CountryPickerViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         // Hide the back/left navigationItem button
-        navigationItem.leftBarButtonItem = nil
-        navigationItem.hidesBackButton = true
+        //navigationItem.leftBarButtonItem = nil
+        //navigationItem.hidesBackButton = true
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         // Show the back/left navigationItem button
-        prepareNavItem()
-        navigationItem.hidesBackButton = false
+        //prepareNavItem()
+        //navigationItem.hidesBackButton = false
     }
     
 }
